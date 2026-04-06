@@ -26,7 +26,7 @@ struct RestaurantMapView: View {
 
                 // Nearby Google Maps / MapKit results
                 ForEach(nearbyItems, id: \.self) { item in
-                    Annotation(item.name ?? "Sushi", coordinate: item.placemark.coordinate) {
+                    Annotation(item.name ?? "Sushi", coordinate: item.location.coordinate) {
                         NearbyPin(isSelected: selectedMapItem == item)
                             .onTapGesture {
                                 selectedMapItem = item
