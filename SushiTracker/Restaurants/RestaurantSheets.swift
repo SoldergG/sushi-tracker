@@ -37,10 +37,10 @@ struct NearbyRestaurantDetailSheet: View {
 
                     // Mini map preview
                     Map(initialPosition: .region(MKCoordinateRegion(
-                        center: mapItem.location.coordinate ?? CLLocationCoordinate2D(),
+                        center: mapItem.location.coordinate,
                         latitudinalMeters: 500, longitudinalMeters: 500
                     ))) {
-                        Annotation(mapItem.name ?? "", coordinate: mapItem.location.coordinate ?? CLLocationCoordinate2D()) {
+                        Annotation(mapItem.name ?? "", coordinate: mapItem.location.coordinate) {
                             Image(systemName: "mappin.circle.fill")
                                 .font(.system(size: 28))
                                 .foregroundStyle(Color(hex: "#E63946"))
@@ -266,8 +266,8 @@ struct AddRestaurantSheet: View {
         self.onSave = onSave
         _name = State(initialValue: prefill?.name ?? "")
         _address = State(initialValue: prefill?.placemark.formattedAddress ?? "")
-        _latitude = State(initialValue: prefill?.location.coordinate.latitude ?? 0)
-        _longitude = State(initialValue: prefill?.location.coordinate.longitude ?? 0)
+        _latitude = State(initialValue: prefill.map { $0.location.coordinate.latitude } ?? 0)
+        _longitude = State(initialValue: prefill.map { $0.location.coordinate.longitude } ?? 0)
     }
 
     var body: some View {
