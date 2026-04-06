@@ -2,65 +2,64 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Commands
+## Setup
 
+1. Copy `SushiTracker/Config.example.swift` to `SushiTracker/Config.swift` and fill in Supabase credentials.
+2. Open `SushiTracker.xcodeproj` in Xcode — Swift Packages resolve automatically on first open.
+3. Select an iOS simulator or device and run (⌘R).
+
+To regenerate the Xcode project after editing `project.yml`:
 ```bash
-# Start dev server (opens QR code for Expo Go)
-npm start
-
-# Run on iOS simulator
-npm run ios
-
-# Run on Android emulator
-npm run android
-
-# Lint
-npm run lint
+xcodegen generate
 ```
-
-No test suite is configured. There is no build step — Expo handles bundling.
 
 ## Architecture
 
-This is a **React Native + Expo** app using a manual screen-switching pattern instead of Expo Router's file-based navigation (despite `expo-router` being installed).
+**Swift/SwiftUI** native iOS app (iOS 16+). Backend is **Supabase** (PostgreSQL + Auth).
 
-### Navigation
+### Entry point & navigation
 
-Navigation is entirely handled in `App.tsx` via a `currentScreen` state enum. `app/_layout.tsx` just renders `<App />`, so the `app/(tabs)/` files are unused. All real screens are in `src/screens/`.
+`SushiTrackerApp.swift` creates `AuthManager.shared` as a `@StateObject` and injects it as `@EnvironmentObject` into `ContentView`.
 
-Auth gate: `AppContent` (in `App.tsx`) checks `user` from context — unauthenticated users see Welcome/Login/SignUp, authenticated users see the main screens.
+`ContentView` is the auth gate:
+- Loading → spinner
+- Not authenticated → `NavigationStack { WelcomeView() }`
+- Authenticated → `NavigationStack { HomeView() }`
 
-### State & Auth
+All navigation from `WelcomeView` and `HomeView` uses `NavigationLink` — no custom router.
 
-`src/context/AppContext.tsx` is the single global context. It wraps the whole app and exposes:
-- `user`, `session`, `loading` — Supabase auth state
-- `signIn`, `signUp`, `signOut` — auth methods
+### Auth
 
-The context listens to `supabase.auth.onAuthStateChange` so session persists across restarts via `expo-secure-store` on iOS/Android.
+`AuthManager` (`Services/AuthManager.swift`) is a singleton `ObservableObject` on `@MainActor`. It:
+- Loads the current session on init via `client.auth.session`
+- Subscribes to `client.auth.authStateChanges` async stream for live updates
+- Exposes `currentUser: User?`, `isAuthenticated: Bool`, `isLoading: Bool`
 
 ### Supabase
 
-`src/services/supabase.ts` exports a singleton `SupabaseClient` instance. All DB operations go through it. Credentials come from `.env` as `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
+`SupabaseService.shared.client` holds the `SupabaseClient`. All DB calls live in `SupabaseService.swift`. Credentials come from `SupabaseConfig` (in `Config.swift`, gitignored).
 
-Database tables: `profiles`, `sushi_sessions`, `sushi_types`, `friends`, `shared_meals`. All have RLS enabled. A Postgres trigger auto-creates a `profiles` row on user signup.
+DB tables used: `sushi_sessions` (with JSONB column `sushi_types`), `profiles`. RLS is enabled — all queries are scoped to the authenticated user's UUID.
 
-`getUserStats` computes stats client-side from `sushi_sessions` — `favorite_sushi` is hardcoded to `'Salmão'` (not yet derived from data).
+### Models
+
+`SushiTypeEntry` (id, name, pieces) is used both for in-memory session state and encoded as JSONB into `sushi_sessions.sushi_types`. `UserStats` is computed client-side inside `SupabaseService.getUserStats`.
 
 ### Screens
 
-Screens receive navigation callbacks as props (e.g., `onBack`, `onStartSession`). There is no navigation library involved — callbacks set `currentScreen` in `App.tsx`.
+| View | Purpose |
+|------|---------|
+| `WelcomeView` | Dark animated landing with feature list |
+| `LoginView` | Email/password sign-in |
+| `SignUpView` | Name/email/password registration |
+| `HomeView` | Stats grid + action buttons, loads stats from Supabase |
+| `SushiSessionView` | Timed session: start → grid +/- per type → end → save to DB |
+| `KeepAwakeView` | Large counter + `UIApplication.isIdleTimerDisabled` |
+| `SushiListView` | Manage sushi types with +/- and delete, sheet to add new |
 
-| Screen | Entry point |
-|--------|------------|
-| `WelcomeScreen` | Unauthenticated landing |
-| `NewLoginScreen` / `NewSignUpScreen` | Auth forms (old `LoginScreen`/`SignUpScreen` are unused) |
-| `HomeScreen` | Dashboard with stats + action buttons |
-| `SushiSessionScreen` | Timed session with per-type piece counters |
-| `KeepAwakeScreen` | Single large counter with screen-wake toggle |
-| `SushiListScreen` | Manage sushi types + per-type counts |
+Shared UI: `AuthField` (dark-themed text field) and `Color(hex:)` extension live in `Views/AuthField.swift`.
 
 ### Known TODOs
 
-- Stats and Calendar buttons in `HomeScreen` both navigate back to `'home'` (not implemented)
-- `favorite_sushi` stat is hardcoded
-- `app/(tabs)/` directory is a leftover from Expo template and is not used
+- `getUserStats`: `favoriteSushi` is hardcoded to `"Salmão"` (should derive from session data)
+- `HomeView.userName`: currently uses email prefix; should read `user_metadata.name` once `auth.currentUser` exposes user metadata
