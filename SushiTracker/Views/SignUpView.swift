@@ -84,9 +84,9 @@ struct SignUpView: View {
                 .padding(.bottom, 18)
 
                 Button { dismiss() } label: {
-                    (Text("Já tem conta? ").foregroundStyle(.white.opacity(0.6)) +
-                     Text("Faça login").foregroundStyle(.white).bold())
-                    .font(.system(size: 14))
+                    Text("Já tem conta? \(Text("Faça login").bold().foregroundStyle(.white))")
+                        .foregroundStyle(.white.opacity(0.6))
+                        .font(.system(size: 14))
                 }
 
                 Spacer()

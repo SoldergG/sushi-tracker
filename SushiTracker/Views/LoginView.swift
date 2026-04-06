@@ -83,9 +83,9 @@ struct LoginView: View {
                 .padding(.bottom, 18)
 
                 NavigationLink { SignUpView() } label: {
-                    (Text("Não tem conta? ").foregroundStyle(.white.opacity(0.6)) +
-                     Text("Registe-se").foregroundStyle(.white).bold())
-                    .font(.system(size: 14))
+                    Text("Não tem conta? \(Text("Registe-se").bold().foregroundStyle(.white))")
+                        .foregroundStyle(.white.opacity(0.6))
+                        .font(.system(size: 14))
                 }
 
                 Spacer()

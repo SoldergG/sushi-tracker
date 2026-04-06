@@ -36,10 +36,10 @@ struct NearbyRestaurantDetailSheet: View {
 
                     // Mini map preview
                     Map(initialPosition: .region(MKCoordinateRegion(
-                        center: mapItem.placemark.coordinate,
+                        center: mapItem.location?.coordinate ?? CLLocationCoordinate2D(),
                         latitudinalMeters: 500, longitudinalMeters: 500
                     ))) {
-                        Annotation(mapItem.name ?? "", coordinate: mapItem.placemark.coordinate) {
+                        Annotation(mapItem.name ?? "", coordinate: mapItem.location?.coordinate ?? CLLocationCoordinate2D()) {
                             Image(systemName: "mappin.circle.fill")
                                 .font(.system(size: 28))
                                 .foregroundStyle(Color(hex: "#E63946"))
@@ -201,7 +201,7 @@ struct SavedRestaurantDetailSheet: View {
 
                         // Open in Maps
                         Button {
-                            let item = MKMapItem(placemark: MKPlacemark(coordinate: restaurant.coordinate))
+                            let item = MKMapItem(location: CLLocation(latitude: restaurant.latitude, longitude: restaurant.longitude))
                             item.name = restaurant.name
                             item.openInMaps()
                         } label: {
@@ -263,8 +263,8 @@ struct AddRestaurantSheet: View {
         self.onSave = onSave
         _name = State(initialValue: prefill?.name ?? "")
         _address = State(initialValue: prefill?.placemark.formattedAddress ?? "")
-        _latitude = State(initialValue: prefill?.placemark.coordinate.latitude ?? 0)
-        _longitude = State(initialValue: prefill?.placemark.coordinate.longitude ?? 0)
+        _latitude = State(initialValue: prefill?.location?.coordinate.latitude ?? 0)
+        _longitude = State(initialValue: prefill?.location?.coordinate.longitude ?? 0)
     }
 
     var body: some View {
