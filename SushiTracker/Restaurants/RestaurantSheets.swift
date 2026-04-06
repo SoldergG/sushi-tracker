@@ -1,7 +1,6 @@
 import SwiftUI
 import MapKit
 import SwiftData
-import Contacts
 
 // MARK: - Nearby restaurant detail (from MapKit search)
 
@@ -202,9 +201,7 @@ struct SavedRestaurantDetailSheet: View {
 
                         // Open in Maps
                         Button {
-                            let addr = CNMutablePostalAddress()
-                            addr.street = restaurant.address
-                            let item = MKMapItem(location: CLLocation(latitude: restaurant.latitude, longitude: restaurant.longitude), address: addr)
+                            let item = MKMapItem(placemark: MKPlacemark(coordinate: restaurant.coordinate))
                             item.name = restaurant.name
                             item.openInMaps()
                         } label: {
