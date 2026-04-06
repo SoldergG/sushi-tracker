@@ -11,6 +11,7 @@
 		0885FF01FB7B758DDA13EA5A /* KeepAwakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFC67FD035F7219FF0AC9E /* KeepAwakeView.swift */; };
 		128A81E79F60C8927D253084 /* RestaurantMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDF1CC72302D6B6CA1A449 /* RestaurantMapView.swift */; };
 		158982134E10AD69BFF79F48 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233923EC52E2C28E957C5FD6 /* ContentView.swift */; };
+		1D212661A7CECDB1E591D29F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECBBDC9B128B6DE5F189BABD /* Assets.xcassets */; };
 		1FE9FDF772BB0BB57B3863E6 /* SushiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7FF63171F8377DAD5D7A2E /* SushiListView.swift */; };
 		20C97F5699CC373037B9F0DC /* RestaurantModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EC8C1E505CD5F2BE88066A /* RestaurantModel.swift */; };
 		29235C9551654A6991A4699C /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76530FA3382D32544F64FDC0 /* BannerAdView.swift */; };
@@ -56,6 +57,7 @@
 		A524F562E8D70E550B9C1751 /* RestaurantHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantHistoryView.swift; sourceTree = "<group>"; };
 		AEF50049B0C9858F721AC860 /* SushiSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SushiSessionView.swift; sourceTree = "<group>"; };
 		EA2B0271A6707801DABBB9D0 /* InterstitialAdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterstitialAdManager.swift; sourceTree = "<group>"; };
+		ECBBDC9B128B6DE5F189BABD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ECCFC67FD035F7219FF0AC9E /* KeepAwakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepAwakeView.swift; sourceTree = "<group>"; };
 		F36C2745D43E5CBF06DC04FA /* SushiTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SushiTrackerApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,6 +87,7 @@
 		3EBE52C750ABEC057CDA913B /* SushiTracker */ = {
 			isa = PBXGroup;
 			children = (
+				ECBBDC9B128B6DE5F189BABD /* Assets.xcassets */,
 				8487BA37D885F6E8B8C963AA /* Config.swift */,
 				233923EC52E2C28E957C5FD6 /* ContentView.swift */,
 				9DBF62C37E86BFF89D811B83 /* Info.plist */,
@@ -167,6 +170,7 @@
 			buildConfigurationList = 2D70D4DA5CC0D1E0B5E0D544 /* Build configuration list for PBXNativeTarget "SushiTracker" */;
 			buildPhases = (
 				0E265691E1A93E19FDCD4BF3 /* Sources */,
+				92E0755AB2D566E1EA25C972 /* Resources */,
 				92C7F8F279371CC4BAE3AD88 /* Frameworks */,
 			);
 			buildRules = (
@@ -218,6 +222,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		92E0755AB2D566E1EA25C972 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D212661A7CECDB1E591D29F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0E265691E1A93E19FDCD4BF3 /* Sources */ = {
