@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0885FF01FB7B758DDA13EA5A /* KeepAwakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFC67FD035F7219FF0AC9E /* KeepAwakeView.swift */; };
 		158982134E10AD69BFF79F48 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233923EC52E2C28E957C5FD6 /* ContentView.swift */; };
-		1DCB9D7E8FF4EF1C1C0F259E /* Config.example.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDAE7E46A905DF29C806D6C /* Config.example.swift */; };
 		1FE9FDF772BB0BB57B3863E6 /* SushiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7FF63171F8377DAD5D7A2E /* SushiListView.swift */; };
 		29235C9551654A6991A4699C /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76530FA3382D32544F64FDC0 /* BannerAdView.swift */; };
 		298501EEB11A2BFCB08BB6A3 /* AdConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627BA9096BDF78486C0C74B0 /* AdConfig.swift */; };
@@ -34,7 +33,6 @@
 		233923EC52E2C28E957C5FD6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2669FBA1426965D89F74A137 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		36E893878E759FBAFECFF236 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		4CDAE7E46A905DF29C806D6C /* Config.example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.example.swift; sourceTree = "<group>"; };
 		57C69BFEA20768A420ECCB78 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		5BAF8EFECC3A9BAEB3BC4C8F /* SushiTracker.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SushiTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		627BA9096BDF78486C0C74B0 /* AdConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdConfig.swift; sourceTree = "<group>"; };
@@ -77,7 +75,6 @@
 		3EBE52C750ABEC057CDA913B /* SushiTracker */ = {
 			isa = PBXGroup;
 			children = (
-				4CDAE7E46A905DF29C806D6C /* Config.example.swift */,
 				8487BA37D885F6E8B8C963AA /* Config.swift */,
 				233923EC52E2C28E957C5FD6 /* ContentView.swift */,
 				9DBF62C37E86BFF89D811B83 /* Info.plist */,
@@ -208,7 +205,6 @@
 				9E7917C5B42C5CC8B387AF03 /* AuthField.swift in Sources */,
 				36B3B31FE8CFCA51F008A399 /* AuthManager.swift in Sources */,
 				29235C9551654A6991A4699C /* BannerAdView.swift in Sources */,
-				1DCB9D7E8FF4EF1C1C0F259E /* Config.example.swift in Sources */,
 				CDF9F2B9623F931F7496D5B9 /* Config.swift in Sources */,
 				158982134E10AD69BFF79F48 /* ContentView.swift in Sources */,
 				9FD229F0DA70D727D38D8699 /* HomeView.swift in Sources */,

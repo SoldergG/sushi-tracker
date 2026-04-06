@@ -19,7 +19,9 @@ targets:
     platform: iOS
     deploymentTarget: "16.0"
     sources:
-      - SushiTracker
+      - path: SushiTracker
+        excludes:
+          - Config.example.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.sushitracker.app
