@@ -8,7 +8,7 @@ struct SushiTrackerApp: App {
     init() {
         // Initialize Google Mobile Ads SDK on app launch.
         // Ads are only requested after this completes.
-        MobileAds.shared.start(completionHandler: nil)
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
     }
 
     var body: some Scene {
