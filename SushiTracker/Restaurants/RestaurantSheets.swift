@@ -361,7 +361,7 @@ private struct GlassTextField: View {
 
 extension CLPlacemark {
     var formattedAddress: String? {
-        [subThoroughfare, thoroughfare, locality, administrativeArea, countryCode]
+        [subThoroughfare, thoroughfare, locality, administrativeArea, isoCountryCode]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
             .joined(separator: ", ")
