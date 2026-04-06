@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct SushiListView: View {
-    @Environment(\.dismiss) private var dismiss
     @State private var sushiTypes = SushiTypeEntry.defaults
     @State private var showAddSheet = false
     @State private var newName = ""
@@ -26,21 +25,11 @@ struct SushiListView: View {
             VStack(spacing: 0) {
                 // Header
                 HStack {
-                    Button { dismiss() } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "chevron.left")
-                            Text("Voltar")
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 14).padding(.vertical, 8)
-                        .glassEffect(in: Capsule())
-                    }
-                    Spacer()
                     Text("Lista de Sushi")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundStyle(.white)
-                    Spacer().frame(width: 80)
                 }
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, 20).padding(.vertical, 16)
 
                 // Stats bar

@@ -1,18 +1,13 @@
 import SwiftUI
 
 struct SushiSessionView: View {
-    @EnvironmentObject var auth: AuthManager
-    @Environment(\.dismiss) private var dismiss
-
     @State private var isSessionActive = false
     @State private var totalPieces = 0
     @State private var sessionStart: Date? = nil
     @State private var elapsed: TimeInterval = 0
     @State private var sushiTypes = SushiTypeEntry.defaults
-    @State private var currentSessionId: UUID? = nil
     @State private var showSummary = false
     @State private var summaryMessage = ""
-    @StateObject private var interstitialAd = InterstitialAdManager()
 
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -32,20 +27,11 @@ struct SushiSessionView: View {
             VStack(spacing: 0) {
                 // Header
                 HStack {
-                    Button { dismiss() } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "chevron.left")
-                            Text("Voltar")
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 14).padding(.vertical, 8)
-                        .glassEffect(in: Capsule())
-                    }
                     Spacer()
                     Text("Sessão de Sushi")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundStyle(.white)
-                    Spacer().frame(width: 80)
+                    Spacer()
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
@@ -83,7 +69,7 @@ struct SushiSessionView: View {
                             .foregroundStyle(.white.opacity(0.9))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 30)
-                        Button { Task { await startSession() } } label: {
+                        Button { startSession() } label: {
                             Text("🍱 Começar Sessão")
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundStyle(.white)
@@ -113,7 +99,7 @@ struct SushiSessionView: View {
                         .padding(.bottom, 100)
                     }
 
-                    Button { Task { await endSession() } } label: {
+                    Button { endSession() } label: {
                         Text("🏁 Terminar Sessão")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(.white)
@@ -132,30 +118,24 @@ struct SushiSessionView: View {
             }
         }
         .alert("Sessão Terminada!", isPresented: $showSummary) {
-            Button("OK") { dismiss() }
+            Button("OK") { showSummary = false }
         } message: { Text(summaryMessage) }
     }
 
-    private func startSession() async {
-        guard let userId = auth.currentUser?.id else { return }
-        await interstitialAd.load()
-        do {
-            sushiTypes = SushiTypeEntry.defaults; totalPieces = 0; elapsed = 0
-            let session = try await SupabaseService.shared.createSession(userId: userId, sushiTypes: sushiTypes)
-            currentSessionId = session.id; sessionStart = Date(); isSessionActive = true
-        } catch { sessionStart = Date(); isSessionActive = true }
+    private func startSession() {
+        sushiTypes = SushiTypeEntry.defaults
+        totalPieces = 0
+        elapsed = 0
+        sessionStart = Date()
+        isSessionActive = true
     }
 
-    private func endSession() async {
+    private func endSession() {
         guard let start = sessionStart else { return }
         let duration = Int(Date().timeIntervalSince(start) / 60)
-        let activeSushi = sushiTypes.filter { $0.pieces > 0 }
-        if let id = currentSessionId {
-            try? await SupabaseService.shared.updateSession(id: id, totalPieces: totalPieces, durationMinutes: duration, sushiTypes: activeSushi)
-        }
         summaryMessage = "Comeste \(totalPieces) peças em \(duration) minutos!"
-        isSessionActive = false; showSummary = true
-        interstitialAd.show()
+        isSessionActive = false
+        showSummary = true
     }
 }
 

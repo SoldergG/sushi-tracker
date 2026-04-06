@@ -1,27 +1,23 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var auth: AuthManager
-
     var body: some View {
-        Group {
-            if auth.isLoading {
-                ZStack {
-                    Color.black.ignoresSafeArea()
-                    VStack(spacing: 16) {
-                        Text("🍣").font(.system(size: 60))
-                        ProgressView().tint(.white)
-                    }
-                }
-            } else if auth.isAuthenticated {
-                NavigationStack {
-                    HomeView()
-                }
-            } else {
-                NavigationStack {
-                    WelcomeView()
-                }
-            }
+        TabView {
+            NavigationStack { HomeView() }
+                .tabItem { Label("Início", systemImage: "house.fill") }
+
+            NavigationStack { SushiSessionView() }
+                .tabItem { Label("Sessão", systemImage: "fork.knife") }
+
+            NavigationStack { SushiListView() }
+                .tabItem { Label("Lista", systemImage: "list.bullet") }
+
+            NavigationStack { RestaurantMapView() }
+                .tabItem { Label("Mapa", systemImage: "map.fill") }
+
+            NavigationStack { RestaurantHistoryView() }
+                .tabItem { Label("Histórico", systemImage: "star.fill") }
         }
+        .tint(Color(hex: "#E63946"))
     }
 }

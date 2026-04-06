@@ -1,18 +1,16 @@
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
-    @EnvironmentObject var auth: AuthManager
-    @State private var stats: UserStats? = nil
-    @State private var isLoadingStats = true
+    @Query private var restaurants: [SushiRestaurant]
     private let bannerHeight = BannerAdView.adHeight()
 
-    private var userName: String {
-        auth.currentUser?.email?.components(separatedBy: "@").first?.capitalized ?? "Utilizador"
+    private var totalPieces: Int {
+        restaurants.reduce(0) { $0 + $1.totalPiecesEaten }
     }
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Gradient background makes glass cards pop
             LinearGradient(
                 colors: [Color(hex: "#ff6b6b"), Color(hex: "#E63946"), Color(hex: "#c0392b")],
                 startPoint: .topLeading, endPoint: .bottomTrailing
@@ -20,99 +18,55 @@ struct HomeView: View {
             .ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: 20) {
-                    // Header greeting
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Bem-vindo(a),")
-                            .font(.system(size: 17))
-                            .foregroundStyle(.white.opacity(0.85))
-                        Text(userName)
-                            .font(.system(size: 28, weight: .bold))
+                VStack(spacing: 24) {
+                    // Logo & title
+                    VStack(spacing: 8) {
+                        Text("🍣")
+                            .font(.system(size: 64))
+                        Text("Sushi Tracker")
+                            .font(.system(size: 32, weight: .bold))
                             .foregroundStyle(.white)
+                        Text("O teu contador de sushi")
+                            .font(.system(size: 15))
+                            .foregroundStyle(.white.opacity(0.75))
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 4)
-                    .padding(.top, 8)
+                    .padding(.top, 20)
 
                     // Stats
-                    if let s = stats {
-                        VStack(alignment: .leading, spacing: 14) {
-                            Text("📊 As Tuas Estatísticas")
-                                .font(.system(size: 18, weight: .bold))
-                                .foregroundStyle(.white)
+                    GlassEffectContainer {
+                        HStack(spacing: 10) {
+                            StatCard(number: "\(restaurants.count)", label: "Restaurantes")
+                            StatCard(number: "\(totalPieces)", label: "Peças Totais")
+                        }
+                    }
 
-                            GlassEffectContainer {
-                                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                                    StatCard(number: "\(s.totalSessions)", label: "Sessões")
-                                    StatCard(number: "\(s.totalPieces)", label: "Total Peças")
-                                    StatCard(number: "\(s.recordPieces)", label: "Recorde")
-                                    StatCard(number: "\(s.averagePieces)", label: "Média")
-                                }
-                            }
-
-                            HStack {
-                                Text("🍣 Favorito:")
-                                    .font(.system(size: 16))
-                                    .foregroundStyle(.white.opacity(0.9))
-                                Spacer()
-                                Text(s.favoriteSushi)
-                                    .font(.system(size: 16, weight: .bold))
+                    // KeepAwake (único extra não no tab bar)
+                    NavigationLink { KeepAwakeView() } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("⚡ Modo Contínuo")
+                                    .font(.system(size: 17, weight: .semibold))
                                     .foregroundStyle(.white)
+                                Text("Tela nunca se apaga")
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(.white.opacity(0.7))
                             }
-                            .padding(16)
-                            .glassEffect(in: RoundedRectangle(cornerRadius: 14))
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.5))
                         }
-                    } else if isLoadingStats {
-                        ProgressView().tint(.white).padding(.top, 20)
+                        .padding(.horizontal, 18).padding(.vertical, 14)
+                        .glassEffect(in: RoundedRectangle(cornerRadius: 14))
                     }
 
-                    // Actions
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("🎯 Ações Rápidas")
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundStyle(.white)
-
-                        GlassEffectContainer {
-                            VStack(spacing: 10) {
-                                NavigationLink { SushiSessionView() } label: {
-                                    ActionRow(title: "🍱 Nova Sessão", subtitle: "Começa a contar peças")
-                                }
-                                NavigationLink { KeepAwakeView() } label: {
-                                    ActionRow(title: "⚡ Modo Contínuo", subtitle: "Tela nunca se apaga")
-                                }
-                                NavigationLink { SushiListView() } label: {
-                                    ActionRow(title: "📝 Lista de Sushi", subtitle: "Gerir tipos de sushi")
-                                }
-                                NavigationLink { RestaurantMapView() } label: {
-                                    ActionRow(title: "🗺 Mapa de Sushi", subtitle: "Explorar restaurantes próximos")
-                                }
-                                NavigationLink { RestaurantHistoryView() } label: {
-                                    ActionRow(title: "⭐ Histórico", subtitle: "Restaurantes visitados")
-                                }
-                            }
-                        }
-                    }
-
-                    // Sign out
-                    Button {
-                        Task { try? await auth.signOut() }
-                    } label: {
-                        Text("Sair")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .glassEffect(in: RoundedRectangle(cornerRadius: 14))
-                    }
-                    .padding(.bottom, bannerHeight + 16)
+                    Spacer().frame(height: bannerHeight + 16)
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 20)
             }
             .navigationBarHidden(true)
-            .task { await loadStats() }
 
-            // Sticky banner
+            // Banner apenas no ecrã inicial (menos invasivo)
             VStack(spacing: 0) {
                 Divider().opacity(0.3)
                 BannerAdView()
@@ -121,16 +75,7 @@ struct HomeView: View {
             }
         }
     }
-
-    private func loadStats() async {
-        guard let userId = auth.currentUser?.id else { return }
-        do { stats = try await SupabaseService.shared.getUserStats(userId: userId) }
-        catch { stats = UserStats(totalSessions: 0, totalPieces: 0, recordPieces: 0, averagePieces: 0, favoriteSushi: "—") }
-        isLoadingStats = false
-    }
 }
-
-// MARK: - Sub-components
 
 private struct StatCard: View {
     let number: String
@@ -147,31 +92,6 @@ private struct StatCard: View {
         }
         .frame(maxWidth: .infinity)
         .padding(16)
-        .glassEffect(in: RoundedRectangle(cornerRadius: 14))
-    }
-}
-
-private struct ActionRow: View {
-    let title: String
-    let subtitle: String
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(.white)
-                Text(subtitle)
-                    .font(.system(size: 13))
-                    .foregroundStyle(.white.opacity(0.7))
-            }
-            Spacer()
-            Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.5))
-        }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 14)
         .glassEffect(in: RoundedRectangle(cornerRadius: 14))
     }
 }

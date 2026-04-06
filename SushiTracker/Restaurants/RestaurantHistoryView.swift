@@ -3,7 +3,6 @@ import SwiftData
 
 struct RestaurantHistoryView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
     @Query(sort: \SushiRestaurant.visitedAt, order: .reverse) private var restaurants: [SushiRestaurant]
 
     @State private var selectedRestaurant: SushiRestaurant? = nil
@@ -24,21 +23,11 @@ struct RestaurantHistoryView: View {
             VStack(spacing: 0) {
                 // Header
                 HStack {
-                    Button { dismiss() } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "chevron.left")
-                            Text("Voltar")
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 14).padding(.vertical, 8)
-                        .glassEffect(in: Capsule())
-                    }
-                    Spacer()
                     Text("Histórico")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundStyle(.white)
-                    Spacer().frame(width: 80)
                 }
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, 20).padding(.vertical, 16)
 
                 if restaurants.isEmpty {

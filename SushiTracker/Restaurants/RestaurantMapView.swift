@@ -4,7 +4,6 @@ import SwiftData
 
 struct RestaurantMapView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
     @Query(sort: \SushiRestaurant.visitedAt, order: .reverse) private var savedRestaurants: [SushiRestaurant]
 
     @StateObject private var location = LocationManager.shared
@@ -71,16 +70,6 @@ struct RestaurantMapView: View {
             // Header overlay
             VStack(spacing: 0) {
                 HStack {
-                    Button { dismiss() } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "chevron.left")
-                            Text("Voltar")
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 14).padding(.vertical, 8)
-                        .glassEffect(in: Capsule())
-                    }
-                    Spacer()
                     Text("Mapa de Sushi")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(.white)
