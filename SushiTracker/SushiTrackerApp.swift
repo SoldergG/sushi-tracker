@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import GoogleMobileAds
 
 @main
@@ -6,8 +7,6 @@ struct SushiTrackerApp: App {
     @StateObject private var auth = AuthManager.shared
 
     init() {
-        // Initialize Google Mobile Ads SDK on app launch.
-        // Ads are only requested after this completes.
         GADMobileAds.sharedInstance().start(completionHandler: nil)
     }
 
@@ -16,6 +15,7 @@ struct SushiTrackerApp: App {
             ContentView()
                 .environmentObject(auth)
         }
+        .modelContainer(for: SushiRestaurant.self)
     }
 }
 

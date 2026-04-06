@@ -83,6 +83,12 @@ struct HomeView: View {
                                 NavigationLink { SushiListView() } label: {
                                     ActionRow(title: "📝 Lista de Sushi", subtitle: "Gerir tipos de sushi")
                                 }
+                                NavigationLink { RestaurantMapView() } label: {
+                                    ActionRow(title: "🗺 Mapa de Sushi", subtitle: "Explorar restaurantes próximos")
+                                }
+                                NavigationLink { RestaurantHistoryView() } label: {
+                                    ActionRow(title: "⭐ Histórico", subtitle: "Restaurantes visitados")
+                                }
                             }
                         }
                     }

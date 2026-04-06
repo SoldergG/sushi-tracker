@@ -22,6 +22,8 @@
 	<string>1</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>A localização é usada para encontrar restaurantes de sushi próximos.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Este identificador será usado para mostrar anúncios relevantes.</string>
 	<key>SKAdNetworkItems</key>

@@ -47,6 +47,7 @@ targets:
         # AdMob — replace with your real App ID from AdMob console
         GADApplicationIdentifier: ca-app-pub-3940256099942544~1458002511
         NSUserTrackingUsageDescription: Este identificador será usado para mostrar anúncios relevantes.
+        NSLocationWhenInUseUsageDescription: A localização é usada para encontrar restaurantes de sushi próximos.
         SKAdNetworkItems:
           - SKAdNetworkIdentifier: cstr6suwn9.skadnetwork
           - SKAdNetworkIdentifier: 4fzdc2evr5.skadnetwork
