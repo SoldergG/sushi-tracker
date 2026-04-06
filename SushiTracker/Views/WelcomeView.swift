@@ -5,46 +5,52 @@ struct WelcomeView: View {
 
     var body: some View {
         ZStack {
-            // Background
-            Color.black.ignoresSafeArea()
+            // Vibrant gradient background — makes glass pop
+            LinearGradient(
+                colors: [Color(hex: "#1a0010"), Color(hex: "#2d0a1a"), Color(hex: "#0d0d1a")],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
             Circle()
-                .fill(Color(hex: "#E63946").opacity(0.12))
-                .frame(width: 400, height: 400)
-                .offset(x: 120, y: -280)
-                .blur(radius: 40)
+                .fill(Color(hex: "#E63946").opacity(0.35))
+                .frame(width: 420, height: 420)
+                .offset(x: 130, y: -300)
+                .blur(radius: 60)
             Circle()
-                .fill(Color(hex: "#FFB700").opacity(0.07))
+                .fill(Color(hex: "#FFB700").opacity(0.18))
                 .frame(width: 300, height: 300)
-                .offset(x: -120, y: 280)
-                .blur(radius: 40)
+                .offset(x: -130, y: 300)
+                .blur(radius: 50)
 
             VStack(spacing: 0) {
                 Spacer()
 
                 // Logo
-                VStack(spacing: 12) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.white.opacity(0.1))
-                            .frame(width: 100, height: 100)
-                            .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1.5))
-                        Text("🍣").font(.system(size: 44))
-                    }
+                VStack(spacing: 14) {
+                    Text("🍣")
+                        .font(.system(size: 52))
+                        .padding(24)
+                        .glassEffect(in: Circle())
+
                     Text("Sushi Tracker")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(.white)
+                        .font(.system(size: 34, weight: .bold))
+                        .foregroundStyle(.white)
                     Text("Conte cada peça do seu rodízio")
                         .font(.system(size: 16))
-                        .foregroundColor(.white.opacity(0.7))
+                        .foregroundStyle(.white.opacity(0.7))
                         .multilineTextAlignment(.center)
                 }
                 .padding(.bottom, 48)
 
-                // Features
-                VStack(spacing: 14) {
-                    FeatureRow(emoji: "📊", text: "Estatísticas detalhadas")
-                    FeatureRow(emoji: "👥", text: "Compartilhe com amigos")
-                    FeatureRow(emoji: "⚡", text: "Modo contínuo sem pausas")
+                // Features — GlassEffectContainer merges the 3 glass rows
+                GlassEffectContainer {
+                    VStack(spacing: 10) {
+                        FeatureRow(emoji: "📊", text: "Estatísticas detalhadas")
+                        FeatureRow(emoji: "👥", text: "Compartilhe com amigos")
+                        FeatureRow(emoji: "⚡", text: "Modo contínuo sem pausas")
+                    }
                 }
                 .padding(.bottom, 40)
 
@@ -55,12 +61,12 @@ struct WelcomeView: View {
                     } label: {
                         Text("Criar Conta")
                             .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 18)
-                            .background(Color(hex: "#E63946").opacity(0.9))
+                            .background(Color(hex: "#E63946"))
                             .clipShape(Capsule())
-                            .shadow(color: Color(hex: "#E63946").opacity(0.4), radius: 8, y: 4)
+                            .shadow(color: Color(hex: "#E63946").opacity(0.5), radius: 12, y: 6)
                     }
 
                     NavigationLink {
@@ -68,12 +74,10 @@ struct WelcomeView: View {
                     } label: {
                         Text("Entrar")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 18)
-                            .background(Color.white.opacity(0.1))
-                            .clipShape(Capsule())
-                            .overlay(Capsule().stroke(Color.white.opacity(0.2), lineWidth: 1))
+                            .glassEffect(in: Capsule())
                     }
                 }
 
@@ -96,20 +100,15 @@ private struct FeatureRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(Color.white.opacity(0.1))
-                    .frame(width: 42, height: 42)
-                Text(emoji).font(.system(size: 18))
-            }
+            Text(emoji).font(.system(size: 20))
+                .frame(width: 36, height: 36)
             Text(text)
                 .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
             Spacer()
         }
-        .padding(14)
-        .background(Color.white.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.1), lineWidth: 1))
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .glassEffect(in: RoundedRectangle(cornerRadius: 14))
     }
 }

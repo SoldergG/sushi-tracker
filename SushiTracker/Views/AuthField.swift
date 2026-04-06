@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Shared text field used in Login and SignUp screens
+// Shared glass text field for Login and SignUp screens
 struct AuthField: View {
     let placeholder: String
     @Binding var text: String
@@ -11,21 +11,20 @@ struct AuthField: View {
         Group {
             if isSecure {
                 SecureField(placeholder, text: $text)
+                    .foregroundStyle(.white)
             } else {
                 TextField(placeholder, text: $text)
                     .keyboardType(keyboard)
                     .autocapitalization(keyboard == .emailAddress ? .none : .words)
                     .autocorrectionDisabled()
+                    .foregroundStyle(.white)
             }
         }
-        .foregroundColor(.white)
         .placeholder(when: text.isEmpty) {
-            Text(placeholder).foregroundColor(.white.opacity(0.5))
+            Text(placeholder).foregroundStyle(.white.opacity(0.45))
         }
         .padding(18)
-        .background(Color.white.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.2), lineWidth: 1))
+        .glassEffect(in: RoundedRectangle(cornerRadius: 16))
     }
 }
 

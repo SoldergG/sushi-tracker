@@ -2,7 +2,7 @@ name: SushiTracker
 options:
   bundleIdPrefix: com.sushitracker
   deploymentTarget:
-    iOS: "16.0"
+    iOS: "26.0"
   createIntermediateGroups: true
 
 packages:
@@ -26,7 +26,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.sushitracker.app
         SWIFT_VERSION: 5.9
-        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        IPHONEOS_DEPLOYMENT_TARGET: "26.0"
         DEVELOPMENT_TEAM: ""
     dependencies:
       - package: Supabase

@@ -12,81 +12,80 @@ struct LoginView: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            LinearGradient(
+                colors: [Color(hex: "#1a0010"), Color(hex: "#2d0a1a"), Color(hex: "#0d0d1a")],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
             Circle()
-                .fill(Color(hex: "#E63946").opacity(0.1))
+                .fill(Color(hex: "#E63946").opacity(0.3))
                 .frame(width: 350, height: 350)
-                .offset(x: 100, y: -200)
-                .blur(radius: 40)
+                .offset(x: 100, y: -220)
+                .blur(radius: 55)
 
             VStack(spacing: 0) {
                 Spacer()
 
                 // Header
                 VStack(spacing: 12) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.white.opacity(0.1))
-                            .frame(width: 80, height: 80)
-                            .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1.5))
-                        Text("🍣").font(.system(size: 32))
-                    }
+                    Text("🍣")
+                        .font(.system(size: 34))
+                        .padding(20)
+                        .glassEffect(in: Circle())
                     Text("Bem-vindo de volta")
                         .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                     Text("Entre para continuar")
                         .font(.system(size: 16))
-                        .foregroundColor(.white.opacity(0.7))
+                        .foregroundStyle(.white.opacity(0.7))
                 }
                 .padding(.bottom, 44)
 
                 // Form
-                VStack(spacing: 18) {
-                    AuthField(placeholder: "Email", text: $email, isSecure: false, keyboard: .emailAddress)
-                    AuthField(placeholder: "Password", text: $password, isSecure: true)
-
-                    if let err = errorMessage {
-                        Text(err)
-                            .font(.system(size: 14))
-                            .foregroundColor(Color(hex: "#E63946"))
-                            .multilineTextAlignment(.center)
+                GlassEffectContainer {
+                    VStack(spacing: 14) {
+                        AuthField(placeholder: "Email", text: $email, keyboard: .emailAddress)
+                        AuthField(placeholder: "Password", text: $password, isSecure: true)
                     }
+                }
+                .padding(.bottom, 18)
 
-                    Button {
-                        Task { await handleLogin() }
-                    } label: {
-                        Group {
-                            if isLoading {
-                                ProgressView().tint(.white)
-                            } else {
-                                Text("Entrar").font(.system(size: 18, weight: .bold))
-                            }
-                        }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
-                        .background(isLoading ? Color.white.opacity(0.2) : Color(hex: "#E63946").opacity(0.9))
-                        .clipShape(Capsule())
-                        .shadow(color: Color(hex: "#E63946").opacity(isLoading ? 0 : 0.3), radius: 8, y: 4)
-                    }
-                    .disabled(isLoading)
-
-                    HStack {
-                        Rectangle().fill(Color.white.opacity(0.2)).frame(height: 1)
-                        Text("ou").font(.system(size: 13)).foregroundColor(.white.opacity(0.5))
-                        Rectangle().fill(Color.white.opacity(0.2)).frame(height: 1)
-                    }
-                    .padding(.vertical, 4)
-
-                    NavigationLink {
-                        SignUpView()
-                    } label: {
-                        Group {
-                            Text("Não tem conta? ").foregroundColor(.white.opacity(0.7)) +
-                            Text("Registe-se").foregroundColor(.white).bold()
-                        }
+                if let err = errorMessage {
+                    Text(err)
                         .font(.system(size: 14))
+                        .foregroundStyle(Color(hex: "#ff6b7a"))
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 10)
+                }
+
+                Button {
+                    Task { await handleLogin() }
+                } label: {
+                    Group {
+                        if isLoading { ProgressView().tint(.white) }
+                        else { Text("Entrar").font(.system(size: 18, weight: .bold)) }
                     }
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(isLoading ? Color.white.opacity(0.15) : Color(hex: "#E63946"))
+                    .clipShape(Capsule())
+                    .shadow(color: Color(hex: "#E63946").opacity(isLoading ? 0 : 0.4), radius: 10, y: 5)
+                }
+                .disabled(isLoading)
+                .padding(.bottom, 24)
+
+                HStack {
+                    Rectangle().fill(.white.opacity(0.15)).frame(height: 1)
+                    Text("ou").font(.system(size: 13)).foregroundStyle(.white.opacity(0.4))
+                    Rectangle().fill(.white.opacity(0.15)).frame(height: 1)
+                }
+                .padding(.bottom, 18)
+
+                NavigationLink { SignUpView() } label: {
+                    (Text("Não tem conta? ").foregroundStyle(.white.opacity(0.6)) +
+                     Text("Registe-se").foregroundStyle(.white).bold())
+                    .font(.system(size: 14))
                 }
 
                 Spacer()
@@ -95,17 +94,14 @@ struct LoginView: View {
         }
         .navigationBarHidden(true)
         .opacity(appeared ? 1 : 0)
-        .onAppear {
-            withAnimation(.easeOut(duration: 0.6)) { appeared = true }
-        }
+        .onAppear { withAnimation(.easeOut(duration: 0.6)) { appeared = true } }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .padding(8)
-                        .background(Color.white.opacity(0.1))
-                        .clipShape(Circle())
+                        .glassEffect(in: Circle())
                 }
             }
         }
@@ -113,16 +109,11 @@ struct LoginView: View {
 
     private func handleLogin() async {
         guard !email.isEmpty, !password.isEmpty else {
-            errorMessage = "Por favor, preencha todos os campos"
-            return
+            errorMessage = "Por favor, preencha todos os campos"; return
         }
-        isLoading = true
-        errorMessage = nil
-        do {
-            try await auth.signIn(email: email, password: password)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+        isLoading = true; errorMessage = nil
+        do { try await auth.signIn(email: email, password: password) }
+        catch { errorMessage = error.localizedDescription }
         isLoading = false
     }
 }
