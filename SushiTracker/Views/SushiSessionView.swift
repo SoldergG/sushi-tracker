@@ -12,6 +12,7 @@ struct SushiSessionView: View {
     @State private var currentSessionId: UUID? = nil
     @State private var showSummary = false
     @State private var summaryMessage = ""
+    @StateObject private var interstitialAd = InterstitialAdManager()
 
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -139,6 +140,8 @@ struct SushiSessionView: View {
 
     private func startSession() async {
         guard let userId = auth.currentUser?.id else { return }
+        // Pre-load the interstitial so it's ready when the session ends
+        await interstitialAd.load()
         do {
             sushiTypes = SushiTypeEntry.defaults
             totalPieces = 0
@@ -174,6 +177,9 @@ struct SushiSessionView: View {
         summaryMessage = "Comeste \(totalPieces) peças em \(duration) minutos!"
         isSessionActive = false
         showSummary = true
+
+        // Show interstitial after session ends — natural break point
+        interstitialAd.show()
     }
 }
 

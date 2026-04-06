@@ -4,6 +4,7 @@ struct HomeView: View {
     @EnvironmentObject var auth: AuthManager
     @State private var stats: UserStats? = nil
     @State private var isLoadingStats = true
+    private let bannerHeight = BannerAdView.adHeight()
 
     private var userName: String {
         // Supabase user_metadata stores the name
@@ -12,6 +13,7 @@ struct HomeView: View {
     }
 
     var body: some View {
+        ZStack(alignment: .bottom) {
         ScrollView {
             VStack(spacing: 0) {
                 // Header
@@ -105,7 +107,8 @@ struct HomeView: View {
                 }
                 .padding(.top, 24)
                 .padding(.horizontal, 4)
-                .padding(.bottom, 30)
+                // Extra bottom padding so content clears the sticky banner
+                .padding(.bottom, bannerHeight + 30)
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
@@ -113,6 +116,15 @@ struct HomeView: View {
         .background(Color(hex: "#f8f9fa"))
         .navigationBarHidden(true)
         .task { await loadStats() }
+
+        // Sticky banner at bottom — non-invasive, always visible
+        VStack(spacing: 0) {
+            Divider()
+            BannerAdView()
+                .frame(height: bannerHeight)
+                .background(Color(hex: "#f8f9fa"))
+        }
+        } // ZStack
     }
 
     private func loadStats() async {
