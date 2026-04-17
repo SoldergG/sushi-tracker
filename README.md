@@ -160,3 +160,12 @@ Para suporte, entre em contato através das issues do GitHub.
 ---
 
 **Desenvolvido com ❤️ para amantes de sushi!**
+
+
+---
+
+<div align="center">
+
+**Built by [Lucas Solderg](https://soldergg.github.io)** · iOS & Mobile Developer from Portugal
+
+</div>
